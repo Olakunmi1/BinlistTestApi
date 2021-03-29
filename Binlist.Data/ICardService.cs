@@ -13,6 +13,8 @@ namespace BinlistTestApi.Binlist.Data
         Task<MyRootClass> GetcardDetails(int cardNumber);
         void CreateHit(HitCount count);
 
-        HitCountsDTO getHitCounts(int cardNum);   
+        HitCount getHitCounts(int cardNum);
+
+        Task<int> SaveChanges();
     }
 }

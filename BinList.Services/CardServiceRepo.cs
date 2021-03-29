@@ -40,17 +40,17 @@ namespace BinlistTestApi.BinList.Services
             return results;
         }
 
-        public HitCountsDTO getHitCounts(int cardNum) 
+        public HitCount getHitCounts(int cardNum) 
         {
-
             var hitCounts = _context.HitCounts.Where(x => x.CardNumber == cardNum).FirstOrDefault();
-            var Hitcountss = new HitCountsDTO
-            {
-                CardNumber = hitCounts.CardNumber,
-                Count = hitCounts.Count
-            };
 
-            return Hitcountss;
+            return hitCounts;
+
+        }
+
+        public async Task<int> SaveChanges()
+        {
+            return await _context.SaveChangesAsync();
 
         }
     }

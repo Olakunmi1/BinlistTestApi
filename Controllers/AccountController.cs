@@ -70,15 +70,12 @@ namespace BinlistTestApi.Controllers
                     _logger.LogDebug(message, "Bad Request");
                     return BadRequest(new ApiResponseDTO<string> { Success = false, Message = message });
                 }
-                var userDTO = new List<SystemUserDTO>
+                var userDTO = new SystemUserDTO
                 {
-                    new SystemUserDTO
-                    {
-                         email = model.email
-                    }
+                    email = model.email
                 };
 
-                return Ok(new ApiResponseDTO<SystemUserDTO>()
+                return Ok(new ApiGenericResponse<SystemUserDTO>()
                 {
                     Success = true,
                     Message = "Registration was Succesful, below is your email.",
@@ -150,18 +147,15 @@ namespace BinlistTestApi.Controllers
 
                     // return basic user info and authentication token
                     _logger.LogInformation("Returned Token succesfully");
-                    var tokenDetails = new List<TokenStructureDTO>
+                    var tokenDetails = new TokenStructureDTO
                     {
-                        new TokenStructureDTO
-                        {
-                            UserName = user.UserName,
-                            Email = user.Email,
-                            TokenString = tokenString,
-                            ExpiresWhen = expiresWhen
-                        }
+                        UserName = user.UserName,
+                        Email = user.Email,
+                        TokenString = tokenString,
+                        ExpiresWhen = expiresWhen
                     };
 
-                    return Ok(new ApiResponseDTO<TokenStructureDTO>
+                    return Ok(new ApiGenericResponse<TokenStructureDTO>
                     {
                         Success = true,
                         Message = "Returned Token succesfully",

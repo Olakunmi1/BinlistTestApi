@@ -1,4 +1,5 @@
 ﻿using BinlistTestApi.Binlist.Data;
+using BinlistTestApi.Binlist.Data.Entities;
 using BinlistTestApi.Helpers;
 using BinlistTestApi.WriteDTO;
 using Microsoft.AspNetCore.Authorization;
@@ -27,7 +28,7 @@ namespace BinlistTestApi.Controllers
         
         [AllowAnonymous]
         [HttpPost("GetCardDetails")]
-        public IActionResult GetCardDetails([FromBody] CardDetailsDTOW model)
+        public async Task<IActionResult> GetCardDetails([FromBody] CardDetailsDTOW model)
         {
             _logger.LogInformation("User about to get card details ");
             try
@@ -37,6 +38,7 @@ namespace BinlistTestApi.Controllers
                 var I_IN = model.CardNumber.ToString().Length;
                 if(IIN < 6)
                 {
+                    _logger.LogInformation("Bad Request ");
                     return BadRequest(new ApiResponseDTO<string>()
                     {
                         Success = false,
@@ -45,18 +47,56 @@ namespace BinlistTestApi.Controllers
                 }
                 else if(IIN > 8)
                 {
+                    _logger.LogInformation("Bad Request ");
                     return BadRequest(new ApiResponseDTO<string>()
                     {
                         Success = false,
                         Message = "Card Number needs to be 6 digits or 8 digits "
                     });
                 }
+                var responseStream = _cardService.GetcardDetails(model.CardNumber);
 
-                //call the external servcie 
-                return Ok(new
+                if(responseStream == null)
                 {
-                    Success = false,
-                    Message = " "
+                    return Ok(new ApiResponseDTO<string>()
+                    {
+                        Success = false,
+                        Message = "Something went wrong pls try again later"
+                    });
+                }
+                var newHitCount = new HitCount
+                {
+                    CardNumber = model.CardNumber,
+                    Count = 1
+                };
+
+                //check if card exists, if exist, increase count
+                var hitCountt = _cardService.getHitCounts(model.CardNumber);
+                _logger.LogInformation("Get exisitng card info ");
+
+                if (hitCountt != null)
+                {
+                    hitCountt.Count += 1;
+                    await _cardService.SaveChanges();
+
+                    _logger.LogInformation("Increment count of card hits ");
+
+                    return Ok(new ApiResponseDTO<MyRootClass>
+                    {
+                        Success = true,
+                        Message = "Debit/Credit card Information retreived succesfully ",
+                        PayLoad = responseStream
+                    });
+                }
+                _cardService.CreateHit(newHitCount);
+                await _cardService.SaveChanges();
+                _logger.LogInformation("New card and count hit created ");
+
+                return Ok(new ApiResponseDTO<MyRootClass>
+                {
+                    Success = true,
+                    Message = "Debit/Credit card Information retreived succesfully ",
+                    PayLoad = responseStream
                 });
             }
             catch(Exception ex)
@@ -67,7 +107,6 @@ namespace BinlistTestApi.Controllers
                 {
                     Success = true,
                     Message = "Something went wrong pls try again later"
-                    // Results = userDTO
                 });
 
             }
@@ -81,10 +120,22 @@ namespace BinlistTestApi.Controllers
             _logger.LogInformation("User about to get card hits ");
             try
             {
+                var hitCount = _cardService.getHitCounts(cardNumber);
+                if(hitCount == null)
+                {
+                    return NotFound(new ApiResponseDTO<string>
+                    {
+                        Success = true,
+                        Message = "Debit/Credit card Information not found, invalid IIN ",
+                    });
+                }
+                var size = hitCount.CardNumber.ToString().Count();
+                var newName = hitCount.CardNumber.ToString() + ":" + hitCount.Count.ToString();
                 return Ok(new
                 {
-                    Success = false,
-                    Message = "You already have a Wallet Account"
+                    Success = true,
+                    Size = size,
+                    Response = newName
                 });
             }
             catch (Exception ex)
