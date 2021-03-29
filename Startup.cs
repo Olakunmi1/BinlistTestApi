@@ -55,7 +55,11 @@ namespace BinlistTestApi
                   Configuration.GetConnectionString("DefaultConnection")));
 
             //registering the interfaces
-            services.AddScoped<ICardService, CardServiceRepo>();
+            //services.AddScoped<ICardService, CardServiceRepo>();
+            services.AddHttpClient<ICardService, CardServiceRepo>(c =>
+            {
+                c.BaseAddress = new Uri("https://lookup.binlist.net/");
+            });
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

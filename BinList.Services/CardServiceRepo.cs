@@ -1,9 +1,12 @@
 ﻿using BinlistTestApi.Binlist.Data;
 using BinlistTestApi.Binlist.Data.Entities;
+using BinlistTestApi.Helpers;
 using BinlistTestApi.ReadDTO;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Wallet.Data.Dbcontext;
 
@@ -12,19 +15,29 @@ namespace BinlistTestApi.BinList.Services
     public class CardServiceRepo : ICardService
     {
         private readonly ApplicationDbContext _context;
+        private readonly HttpClient _httpClient;
 
-        public CardServiceRepo(ApplicationDbContext context)
+        public CardServiceRepo(ApplicationDbContext context, HttpClient httpClient)
         {
             _context = context;
+            _httpClient = httpClient;
         }
         public void CreateHit(HitCount count)
         {
             _context.HitCounts.Add(count);
         }
 
-        public void GetcardDetails(int cardNumber)
+        //make a call to An External Api service
+        public async Task<MyRootClass> GetcardDetails(int cardNumber)
         {
-           //call 3rd party API here
+            var IIN = cardNumber.ToString();
+            string API_URL = IIN;
+            var JsonResponse = await _httpClient.GetAsync(API_URL);
+            var responseStream = await JsonResponse.Content.ReadAsStringAsync();
+
+            var results = JsonConvert.DeserializeObject<MyRootClass>(responseStream);
+
+            return results;
         }
 
         public HitCountsDTO getHitCounts(int cardNum) 

@@ -32,6 +32,27 @@ namespace BinlistTestApi.Controllers
             _logger.LogInformation("User about to get card details ");
             try
             {
+                var iin = Math.Floor(Math.Log10(model.CardNumber) + 1);
+                var IIN = model.CardNumber.ToString().Count();
+                var I_IN = model.CardNumber.ToString().Length;
+                if(IIN < 6)
+                {
+                    return BadRequest(new ApiResponseDTO<string>()
+                    {
+                        Success = false,
+                        Message = "Card Number needs to be 6 digits or 8 digits "
+                    });
+                }
+                else if(IIN > 8)
+                {
+                    return BadRequest(new ApiResponseDTO<string>()
+                    {
+                        Success = false,
+                        Message = "Card Number needs to be 6 digits or 8 digits "
+                    });
+                }
+
+                //call the external servcie 
                 return Ok(new
                 {
                     Success = false,

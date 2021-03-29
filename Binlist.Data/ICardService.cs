@@ -1,4 +1,5 @@
 ﻿using BinlistTestApi.Binlist.Data.Entities;
+using BinlistTestApi.Helpers;
 using BinlistTestApi.ReadDTO;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,9 @@ namespace BinlistTestApi.Binlist.Data
 {
    public interface ICardService
     {
-        void GetcardDetails(int cardNumber);
-
+        Task<MyRootClass> GetcardDetails(int cardNumber);
         void CreateHit(HitCount count);
 
-       HitCountsDTO getHitCounts(int cardNum);   
+        HitCountsDTO getHitCounts(int cardNum);   
     }
 }
