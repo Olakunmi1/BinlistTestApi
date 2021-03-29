@@ -31,8 +31,7 @@ namespace BinlistTestApi.BinList.Services
         public async Task<MyRootClass> GetcardDetails(int cardNumber)
         {
             var IIN = cardNumber.ToString();
-            string API_URL = IIN;
-            var JsonResponse = await _httpClient.GetAsync(API_URL);
+            var JsonResponse =  await _httpClient.GetAsync(IIN);
             var responseStream = await JsonResponse.Content.ReadAsStringAsync();
 
             var results = JsonConvert.DeserializeObject<MyRootClass>(responseStream);

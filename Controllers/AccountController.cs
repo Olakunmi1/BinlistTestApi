@@ -60,7 +60,7 @@ namespace BinlistTestApi.Controllers
                 //create Account
                 var user = new ApplicationUser { UserName = model.UserName, Email = model.email};
 
-                IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+                IdentityResult result = await _userManager.CreateAsync(user, model.password);
 
                 if (!result.Succeeded)
                 {
@@ -75,11 +75,11 @@ namespace BinlistTestApi.Controllers
                     email = model.email
                 };
 
-                return Ok(new ApiGenericResponse<SystemUserDTO>()
+                return Ok(new ApiResponseDTO<SystemUserDTO>()
                 {
                     Success = true,
                     Message = "Registration was Succesful, below is your email.",
-                    Results = userDTO
+                    PayLoad = userDTO
                 });
             }
 
@@ -155,11 +155,11 @@ namespace BinlistTestApi.Controllers
                         ExpiresWhen = expiresWhen
                     };
 
-                    return Ok(new ApiGenericResponse<TokenStructureDTO>
+                    return Ok(new ApiResponseDTO<TokenStructureDTO>
                     {
                         Success = true,
                         Message = "Returned Token succesfully",
-                        Results = tokenDetails
+                        PayLoad = tokenDetails
                     });
 
                 }

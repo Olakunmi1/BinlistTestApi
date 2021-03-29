@@ -9,8 +9,6 @@ namespace BinlistTestApi.Helpers
     {
         public bool Success { get; set; }
         public string Message { get; set; }
-        public Task<T> PayLoad { get; set; } 
-
-       // public List<T> Results { get; set; }
+        public T PayLoad { get; set; } 
     }
 }

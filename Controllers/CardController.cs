@@ -25,17 +25,22 @@ namespace BinlistTestApi.Controllers
             _cardService = cardService;
         }
 
-        
-        [AllowAnonymous]
         [HttpPost("GetCardDetails")]
         public async Task<IActionResult> GetCardDetails([FromBody] CardDetailsDTOW model)
         {
             _logger.LogInformation("User about to get card details ");
             try
             {
-                var iin = Math.Floor(Math.Log10(model.CardNumber) + 1);
+                if(model.CardNumber < 0)
+                    return BadRequest(new ApiResponseDTO<string>()
+                    {
+                        Success = false,
+                        Message = "Card Number cannot be negative "
+                    });
+
                 var IIN = model.CardNumber.ToString().Count();
-                var I_IN = model.CardNumber.ToString().Length;
+                
+                //optimize this into 1 line
                 if(IIN < 6)
                 {
                     _logger.LogInformation("Bad Request ");
@@ -54,7 +59,7 @@ namespace BinlistTestApi.Controllers
                         Message = "Card Number needs to be 6 digits or 8 digits "
                     });
                 }
-                var responseStream = _cardService.GetcardDetails(model.CardNumber);
+                var responseStream = await _cardService.GetcardDetails(model.CardNumber);
 
                 if(responseStream == null)
                 {
@@ -113,7 +118,6 @@ namespace BinlistTestApi.Controllers
 
         }
 
-        [AllowAnonymous]
         [HttpGet("GetCardHits/{cardNumber}")]
         public IActionResult GetCardHits(int cardNumber)
         {
@@ -130,7 +134,7 @@ namespace BinlistTestApi.Controllers
                     });
                 }
                 var size = hitCount.CardNumber.ToString().Count();
-                var newName = hitCount.CardNumber.ToString() + ":" + hitCount.Count.ToString();
+                var newName = hitCount.CardNumber.ToString() + ":" + " " +  hitCount.Count.ToString();
                 return Ok(new
                 {
                     Success = true,
@@ -146,7 +150,6 @@ namespace BinlistTestApi.Controllers
                 {
                     Success = true,
                     Message = "Something went wrong pls try again later"
-                    // Results = userDTO
                 });
 
             }
