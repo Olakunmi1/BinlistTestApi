@@ -1,5 +1,15 @@
-﻿using System;
+﻿using BinlistTestApi.Binlist.Data;
+using BinlistTestApi.Controllers;
+using BinlistTestApi.Helpers;
+using BinlistTestApi.ReadDTO;
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -7,64 +17,48 @@ namespace TestProject
 {
    public class CardTest
     {
-        //private static List<customersDTO> GetAllCustomers()
-        //{
-        //    List<customersDTO> customers = new List<customersDTO>
-        //    {
-        //        new customersDTO
-        //        {
-        //            Name = "John reck",
-        //            Address = "30, marina street",
-        //            email = "user@gmail.com",
-        //            gender = "male",
-        //            created_at = DateTime.Now
+        const int CardNum = 5789123;
+        const int count1 = 2;
+        const int CardNum2 = 54689022;
+        const int count2 = 4;
+        private static List<HitCountsDTO_GetAll> GetAllCardHits()
+        {
+            List<HitCountsDTO_GetAll> customers = new List<HitCountsDTO_GetAll>
+            {
+                new HitCountsDTO_GetAll
+                {
+                    Size = 7,
+                    Response = CardNum.ToString() + ":" + " " + count1.ToString()
+                },
 
-        //        },
+                 new HitCountsDTO_GetAll
+                {
+                    Size = 8,
+                    Response = CardNum2.ToString() + ":" + " " + count2.ToString()
+                },
+            };
 
-        //         new customersDTO
-        //        {
-        //            Name = "Angel Viola",
-        //            Address = "30, marina street",
-        //            email = "Viola@gmail.com",
-        //            gender = "female",
-        //            created_at = DateTime.Now
-
-        //        },
-
-        //         new customersDTO
-        //         {
-        //            Name = "Maritn Luther",
-        //             Address = "30, marina street",
-        //             email = "Viola@gmail.com",
-        //             gender = "female",
-        //             created_at = DateTime.Now
-
-        //         }
-
-        //    };
-
-        //    return customers;
-        //}
-
+            return customers;
+        }
 
         [Fact]
         public void GetListOfCardHits_Action_method_Should_Return_ListOfCardHits()
         {
-            //// Arrange ---intializing the classes needed, and Setup up Mock
-            //var mockCustomerservice = new Mock<ICustomer>();
-            //ILogger<CustomerController> logger = new Logger<CustomerController>(new NullLoggerFactory()); //mock for Ilogger 
-            //mockCustomerservice.Setup(c => c.GetListOf_AllCustomers()).Returns(GetAllCustomers());
+            // arrange ---intializing the classes needed, and setup up mock
+            var mockcardservice = new Mock<ICardService>();
+            ILogger<CardController> logger = new Logger<CardController>(new NullLoggerFactory()); //mock for ilogger 
+            mockcardservice.Setup(c => c.getAllCardHits()).Returns(GetAllCardHits());
 
-            //var controller = new CustomerController(mockCustomerservice.Object, logger);
+            var controller = new CardController(logger, mockcardservice.Object);
 
-            ////Act  --- Calling on the method to be tested 
+            //act  --- calling on the method to be tested 
 
-            //var result = controller.GetListOf_Customers();
+            var result = controller.GetAllCardHits();
 
-            ////Assert  --- i.e we need to start testing d outcome
-            //var viewresult = result.Should().BeOfType<OkObjectResult>();
-            //var model = viewresult.Subject.Value.Should().BeAssignableTo<APIGenericResponseDTO<customersDTO>>();
-            //model.Subject.Results.Count().Should().Be(3);
+            //assert  --- i.e we need to start testing d outcome
+            var viewresult = result.Should().BeOfType<OkObjectResult>();
+            var model = viewresult.Subject.Value.Should().BeAssignableTo<ApiGenericResponseDTO<HitCountsDTO_GetAll>>();
+            model.Subject.Response.Count().Should().Be(2);
         }
     }
 }
