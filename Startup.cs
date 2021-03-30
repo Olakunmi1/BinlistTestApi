@@ -64,6 +64,13 @@ namespace BinlistTestApi
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            //configure caching middleware
+            services.AddResponseCaching(options =>
+            {
+                options.UseCaseSensitivePaths = true;
+                options.MaximumBodySize = 1024;
+            });
+
             //below we are applying Authorization Globally instead of applying it on each controller
             services.AddMvc(options =>
             {
@@ -71,15 +78,14 @@ namespace BinlistTestApi
                                 .RequireAuthenticatedUser()
                                 .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
+                //cache profile 
+                options.CacheProfiles.Add("default", new CacheProfile
+                {
+                    Location = ResponseCacheLocation.Any
+                });
 
             });
 
-            //configure caching middleware
-            services.AddResponseCaching(options =>
-            {
-                options.UseCaseSensitivePaths = true;
-                options.MaximumBodySize = 1024;
-            });
             //configure identity options for passwprds
             services.Configure<IdentityOptions>(options =>
             {
