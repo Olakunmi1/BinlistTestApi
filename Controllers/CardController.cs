@@ -119,6 +119,42 @@ namespace BinlistTestApi.Controllers
 
         }
 
+        [HttpGet("GetAllCardHits")]
+        public IActionResult GetAllCardHits()
+        {
+            _logger.LogInformation("User about to get All card hits ");
+            try
+            {
+                var hitCount = _cardService.getAllCardHits();
+                if (hitCount == null)
+                {
+                    return NotFound(new ApiResponseDTO<string>
+                    {
+                        Success = true,
+                        Message = "Debit/Credit cards Information not found ",
+                    });
+                }
+                return Ok(new ApiResponseDTO<HitCountsDTO_GetAll>
+                {
+                    Success = true,
+                    Message = "All Card hits Information ",
+                    Response = hitCount
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, "An exception Occured");
+
+                return Ok(new ApiResponseDTO<string>()
+                {
+                    Success = true,
+                    Message = "Something went wrong pls try again later"
+                });
+
+            }
+
+        }
+
         [HttpGet("GetSingleCardHits/{cardNumber}")]
         public IActionResult GetSingleCardHits(int cardNumber)
         {
@@ -141,42 +177,6 @@ namespace BinlistTestApi.Controllers
                     Success = true,
                     Size = size,
                     Response = newName
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, "An exception Occured");
-
-                return Ok(new ApiResponseDTO<string>()
-                {
-                    Success = true,
-                    Message = "Something went wrong pls try again later"
-                });
-
-            }
-
-        }
-
-        [HttpGet("GetAllCardHits")]
-        public IActionResult GetAllCardHits()
-        {
-            _logger.LogInformation("User about to get All card hits ");
-            try
-            {
-                var hitCount = _cardService.getAllCardHits();
-                if (hitCount == null)
-                {
-                    return NotFound(new ApiResponseDTO<string>
-                    {
-                        Success = true,
-                        Message = "Debit/Credit cards Information not found ",
-                    });
-                }
-                return Ok(new ApiResponseDTO<HitCountsDTO_GetAll>
-                {
-                    Success = true,
-                    Message = "All Card hits Information ",
-                    Response = hitCount
                 });
             }
             catch (Exception ex)
