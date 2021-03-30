@@ -6,9 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="TestProject\**" />
     <Compile Remove="Xunit\**" />
+    <Content Remove="TestProject\**" />
     <Content Remove="Xunit\**" />
+    <EmbeddedResource Remove="TestProject\**" />
     <EmbeddedResource Remove="Xunit\**" />
+    <None Remove="TestProject\**" />
     <None Remove="Xunit\**" />
   </ItemGroup>
 
