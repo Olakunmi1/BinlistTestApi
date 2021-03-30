@@ -27,6 +27,20 @@ namespace BinlistTestApi.BinList.Services
             _context.HitCounts.Add(count);
         }
 
+        public List<HitCountsDTO_GetAll> getAllCardHits()
+        {
+            var collections = _context.HitCounts as IQueryable<HitCount>;
+            collections.ToList();
+
+            var listOfHits_ReadDTO = collections
+                 .Select(x => new HitCountsDTO_GetAll
+                 {
+                      Size = x.CardNumber.ToString().Count(),
+                      Response = x.CardNumber.ToString() + ":" + " " + x.Count.ToString()
+                 }).ToList();
+            return listOfHits_ReadDTO;
+        }
+
         //make a call to An External Api service
         public async Task<MyRootClass> GetcardDetails(int cardNumber)
         {

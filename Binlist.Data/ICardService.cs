@@ -15,6 +15,7 @@ namespace BinlistTestApi.Binlist.Data
 
         HitCount getHitCounts(int cardNum);
 
+        List<HitCountsDTO_GetAll> getAllCardHits();
         Task<int> SaveChanges();
     }
 }

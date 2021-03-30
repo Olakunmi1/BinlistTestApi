@@ -1,6 +1,7 @@
 ﻿using BinlistTestApi.Binlist.Data;
 using BinlistTestApi.Binlist.Data.Entities;
 using BinlistTestApi.Helpers;
+using BinlistTestApi.ReadDTO;
 using BinlistTestApi.WriteDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -84,7 +85,7 @@ namespace BinlistTestApi.Controllers
                     hitCountt.Count += 1;
                     await _cardService.SaveChanges();
 
-                    _logger.LogInformation("Increment count of card hits ");
+                    _logger.LogInformation("Count of card hits Incremented ");
 
                     return Ok(new ApiResponseDTO<MyRootClass>
                     {
@@ -118,10 +119,10 @@ namespace BinlistTestApi.Controllers
 
         }
 
-        [HttpGet("GetCardHits/{cardNumber}")]
-        public IActionResult GetCardHits(int cardNumber)
+        [HttpGet("GetSingleCardHits/{cardNumber}")]
+        public IActionResult GetSingleCardHits(int cardNumber)
         {
-            _logger.LogInformation("User about to get card hits ");
+            _logger.LogInformation("User about to get single card hits ");
             try
             {
                 var hitCount = _cardService.getHitCounts(cardNumber);
@@ -155,5 +156,42 @@ namespace BinlistTestApi.Controllers
             }
 
         }
+
+        [HttpGet("GetAllCardHits")]
+        public IActionResult GetAllCardHits()
+        {
+            _logger.LogInformation("User about to get All card hits ");
+            try
+            {
+                var hitCount = _cardService.getAllCardHits();
+                if (hitCount == null)
+                {
+                    return NotFound(new ApiResponseDTO<string>
+                    {
+                        Success = true,
+                        Message = "Debit/Credit cards Information not found ",
+                    });
+                }
+                return Ok(new ApiResponseDTO<HitCountsDTO_GetAll>
+                {
+                    Success = true,
+                    Message = "All Card hits Information ",
+                    Response = hitCount
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, "An exception Occured");
+
+                return Ok(new ApiResponseDTO<string>()
+                {
+                    Success = true,
+                    Message = "Something went wrong pls try again later"
+                });
+
+            }
+
+        }
+
     }
 }
