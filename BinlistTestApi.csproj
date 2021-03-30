@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Xunit\**" />
+    <Content Remove="Xunit\**" />
+    <EmbeddedResource Remove="Xunit\**" />
+    <None Remove="Xunit\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Controllers\WeatherForecastController.cs" />
     <Compile Remove="Helpers\ApiGenericResponse.cs" />
     <Compile Remove="WeatherForecast.cs" />
