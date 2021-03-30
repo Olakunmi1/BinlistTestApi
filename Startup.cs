@@ -74,6 +74,12 @@ namespace BinlistTestApi
 
             });
 
+            //configure caching middleware
+            services.AddResponseCaching(options =>
+            {
+                options.UseCaseSensitivePaths = true;
+                options.MaximumBodySize = 1024;
+            });
             //configure identity options for passwprds
             services.Configure<IdentityOptions>(options =>
             {
@@ -157,7 +163,7 @@ namespace BinlistTestApi
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseResponseCaching();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

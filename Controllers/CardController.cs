@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace BinlistTestApi.Controllers
 {
+    [ResponseCache(Duration = 60)]
     [ApiController]
     [Route("api/Card")]
     public class CardController : ControllerBase
@@ -25,7 +26,7 @@ namespace BinlistTestApi.Controllers
             _logger = logger;
             _cardService = cardService;
         }
-
+       
         [HttpPost("GetCardDetails")]
         public async Task<IActionResult> GetCardDetails([FromBody] CardDetailsDTOW model)
         {
@@ -119,6 +120,7 @@ namespace BinlistTestApi.Controllers
 
         }
 
+       
         [HttpGet("GetAllCardHits")]
         public IActionResult GetAllCardHits()
         {
