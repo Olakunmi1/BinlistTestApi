@@ -26,7 +26,7 @@ namespace BinlistTestApi.Controllers
             _logger = logger;
             _cardService = cardService;
         }
-       
+        [ProducesResponseType(typeof(ApiResponseDTO<MyRootClass>), 200)]
         [HttpPost("GetCardDetails")]
         public async Task<IActionResult> GetCardDetails([FromBody] CardDetailsDTOW model)
         {
@@ -120,7 +120,7 @@ namespace BinlistTestApi.Controllers
 
         }
 
-       
+        [ProducesResponseType(typeof(ApiGenericResponseDTO<HitCountsDTO_GetAll>), 200)]
         [HttpGet("GetAllCardHits")]
         public IActionResult GetAllCardHits()
         {
@@ -130,13 +130,13 @@ namespace BinlistTestApi.Controllers
                 var hitCount = _cardService.getAllCardHits();
                 if (hitCount == null)
                 {
-                    return NotFound(new ApiResponseDTO<string>
+                    return NotFound(new ApiGenericResponseDTO<string>
                     {
                         Success = true,
                         Message = "Debit/Credit cards Information not found ",
                     });
                 }
-                return Ok(new ApiResponseDTO<HitCountsDTO_GetAll>
+                return Ok(new ApiGenericResponseDTO<HitCountsDTO_GetAll>
                 {
                     Success = true,
                     Message = "All Card hits Information ",
@@ -147,7 +147,7 @@ namespace BinlistTestApi.Controllers
             {
                 _logger.LogError(ex.Message, "An exception Occured");
 
-                return Ok(new ApiResponseDTO<string>()
+                return Ok(new ApiGenericResponseDTO<string>()
                 {
                     Success = true,
                     Message = "Something went wrong pls try again later"
@@ -156,7 +156,7 @@ namespace BinlistTestApi.Controllers
             }
 
         }
-
+        
         [HttpGet("GetSingleCardHits/{cardNumber}")]
         public IActionResult GetSingleCardHits(int cardNumber)
         {
@@ -166,7 +166,7 @@ namespace BinlistTestApi.Controllers
                 var hitCount = _cardService.getHitCounts(cardNumber);
                 if(hitCount == null)
                 {
-                    return NotFound(new ApiResponseDTO<string>
+                    return NotFound(new ApiGenericResponseDTO<string>
                     {
                         Success = true,
                         Message = "Debit/Credit card Information not found, invalid IIN ",
@@ -185,7 +185,7 @@ namespace BinlistTestApi.Controllers
             {
                 _logger.LogError(ex.Message, "An exception Occured");
 
-                return Ok(new ApiResponseDTO<string>()
+                return Ok(new ApiGenericResponseDTO<string>()
                 {
                     Success = true,
                     Message = "Something went wrong pls try again later"
