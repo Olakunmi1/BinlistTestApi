@@ -42,7 +42,7 @@ namespace BinlistTestApi.Controllers
 
                 var IIN = model.CardNumber.ToString().Count();
                 
-                //optimize this into 1 line
+                //optimize this into 1 line later
                 if(IIN < 6)
                 {
                     _logger.LogInformation("Bad Request ");

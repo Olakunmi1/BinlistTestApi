@@ -71,7 +71,7 @@ namespace BinlistTestApi
                 options.MaximumBodySize = 1024;
             });
 
-            //below we are applying Authorization Globally instead of applying it on each controller
+            //Authorization Globally
             services.AddMvc(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
@@ -151,7 +151,7 @@ namespace BinlistTestApi
                 //Helps to tell swagger which of our actions require Authorization. 
                 options.OperationFilter<AuthenticationRequirementsOperationFilter>();
 
-                services.AddMvcCore().AddApiExplorer();  //Needed for swagger to work with .netcoremvc
+                services.AddMvcCore().AddApiExplorer();
 
             });
         }
