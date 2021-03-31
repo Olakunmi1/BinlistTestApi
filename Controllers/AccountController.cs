@@ -34,6 +34,7 @@ namespace BinlistTestApi.Controllers
         }
 
         [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponseDTO<SystemUserDTO>), 200)]
         [HttpPost("RegisterUser")]
         public async Task<IActionResult> RegisterUser(SystemuserDTOW model)
         {         
@@ -97,6 +98,7 @@ namespace BinlistTestApi.Controllers
 
         //Login and grab a token 
         [AllowAnonymous]
+        [ProducesResponseType(typeof(ApiResponseDTO<TokenStructureDTO>), 200)]
         [HttpPost("Authenticate/token")]
         public async Task<IActionResult> Authenticate([FromBody] Authenticate model)
         {
@@ -120,8 +122,6 @@ namespace BinlistTestApi.Controllers
 
                     return BadRequest(new { message = strbld2 });
                 }
-
-                //var user = _userService.Authenticate_2(model.Username, model.Password);
 
                 var user = await _userManager.FindByEmailAsync(model.email);
                 if (user != null && (await _userManager.CheckPasswordAsync(user, model.Password)))

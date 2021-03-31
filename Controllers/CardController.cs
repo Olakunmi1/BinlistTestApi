@@ -65,10 +65,10 @@ namespace BinlistTestApi.Controllers
 
                 if(responseStream == null)
                 {
-                    return Ok(new ApiResponseDTO<string>()
+                    return NotFound(new ApiResponseDTO<string>()
                     {
                         Success = false,
-                        Message = "Something went wrong pls try again later"
+                        Message = "No credit/debit details found "
                     });
                 }
                 var newHitCount = new HitCount
@@ -156,7 +156,9 @@ namespace BinlistTestApi.Controllers
             }
 
         }
-        
+
+        //get Single card Hits
+        /*
         [HttpGet("GetSingleCardHits/{cardNumber}")]
         public IActionResult GetSingleCardHits(int cardNumber)
         {
@@ -194,6 +196,7 @@ namespace BinlistTestApi.Controllers
             }
 
         }
+        */
 
     }
 }
